@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>故宫博物院——穿越六百年的文化殿堂</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F5F3EF;
+            color: #333333;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: linear-gradient(rgba(245, 243, 239, 0.9), rgba(245, 243, 239, 0.9)), 
+                              url('https://gd-hbimg-edge.huaban.com/e39dd1843aa4da749e381781f6b0a102a2e588533c9f0-ejG1Yd?auth_key=1766750400-32e2f108732e41e98571c00593d85eb6-0-a15052c9e57f9a09192ea115fcfb3473');
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+        }
+
+        #h5-container {
+            width: 640px;
+            height: 1040px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-radius: 5px;
+        }
+
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: transform 0.8s ease, opacity 0.8s ease;
+            background-color: #F5F3EF;
+            overflow-y: auto;
+        }
+
+        .page.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .page.prev {
+            transform: translateX(-100%);
+        }
+
+        /* 页面通用样式 */
+        .page-header {
+            margin-bottom: 30px;
+            border-bottom: 3px solid #BE1E2D;
+            padding-bottom: 15px;
+        }
+
+        .page-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #BE1E2D;
+            line-height: 1.2;
+            margin-bottom: 5px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: #666;
+            font-weight: 400;
+        }
+
+        .content-block {
+            margin-bottom: 25px;
+        }
+
+        .content-title {
+            font-size: 22px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 12px;
+            padding-left: 8px;
+            border-left: 4px solid #F8E71C;
+        }
+
+        .content-text {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        .image-container {
+            margin: 20px 0;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .image-container img:hover {
+            transform: scale(1.03);
+        }
+
+        .image-caption {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            padding: 8px 0;
+            background-color: rgba(190, 30, 45, 0.05);
+        }
+
+        /* 第1页：封面 */
+        #page-1 {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(245, 243, 239, 0.9), rgba(245, 243, 239, 0.9)), 
+                        url('https://gd-hbimg-edge.huaban.com/e39dd1843aa4da749e381781f6b0a102a2e588533c9f0-ejG1Yd?auth_key=1766750400-32e2f108732e41e98571c00593d85eb6-0-a15052c9e57f9a09192ea115fcfb3473');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .main-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: #BE1E2D;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .main-subtitle {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        .cover-decoration {
+            width: 200px;
+            height: 8px;
+            background-color: #F8E71C;
+            margin: 30px auto;
+            border-radius: 4px;
+        }
+
+        .start-hint {
+            font-size: 18px;
+            color: #666;
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        /* 第2页：历史背景 */
+        .timeline {
+            margin: 20px 0 30px;
+        }
+
+        .timeline-item {
+            margin-bottom: 25px;
+            padding-left: 20px;
+            border-left: 3px solid #BE1E2D;
+            position: relative;
+        }
+
+        .timeline-year {
+            font-size: 20px;
+            font-weight: 700;
+            color: #BE1E2D;
+            margin-bottom: 5px;
+        }
+
+        .timeline-event {
+            font-size: 18px;
+            color: #444;
+            line-height: 1.5;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 13px;
+            height: 13px;
+            background-color: #F8E71C;
+            border-radius: 50%;
+            border: 3px solid #BE1E2D;
+        }
+
+        /* 第3页：建筑特色 */
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .architecture-item {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .architecture-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .architecture-info {
+            padding: 15px;
+        }
+
+        .architecture-name {
+            font-size: 20px;
+            font-weight: 500;
+            color: #BE1E2D;
+            margin-bottom: 8px;
+        }
+
+        .architecture-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* 第4页：地理与周边 */
+        .map-container {
+            margin: 20px 0;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .map-simplified {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: #e6f7ff;
+            border-radius: 5px;
+        }
+
+        .beijing-label {
+            position: absolute;
+            top: 10%;
+            left: 25%;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .forbidden-city {
+            position: absolute;
+            top: 40%;
+            left: 40%;
+            width: 60px;
+            height: 60px;
+            background-color: #BE1E2D;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 0 10px rgba(190, 30, 45, 0.5);
+        }
+
+        .surroundings {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .surrounding-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #F8E71C;
+        }
+
+        .surrounding-name {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .surrounding-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* 第5页：参观指南 */
+        .transportation {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .transport-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .transport-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .transport-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .transport-detail {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .tips-list {
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+
+        .tips-list li {
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #444;
+            line-height: 1.5;
+        }
+
+        .copyright {
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+
+        /* 导航与进度指示器 */
+        .progress-indicator {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(190, 30, 45, 0.3);
+            margin: 0 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .progress-dot.active {
+            background-color: #BE1E2D;
+            transform: scale(1.2);
+        }
+
+        .navigation {
+            position: absolute;
+            bottom: 60px;
+            right: 30px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background-color: #BE1E2D;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(190, 30, 45, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background-color: #F8E71C;
+            color: #333;
+            transform: scale(1.05);
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #BE1E2D;
+            z-index: 100;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 3px;
+            background-color: rgba(245, 243, 239, 0.8);
+        }
+
+        /* 响应式调整 */
+        @media (max-height: 1080px) {
+            #h5-container {
+                transform: scale(0.9);
+            }
+        }
+
+        @media (max-height: 900px) {
+            #h5-container {
+                transform: scale(0.8);
+            }
+        }
+
+        /* 滚动条样式 */
+        .page::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page::-webkit-scrollbar-track {
+            background: rgba(190, 30, 45, 0.05);
+        }
+
+        .page::-webkit-scrollbar-thumb {
+            background: rgba(190, 30, 45, 0.3);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div id="h5-container">
+        <!-- 故宫Logo -->
+        <div class="logo" id="home-btn">故宫博物院</div>
+        
+        <!-- 页面1：封面 -->
+        <section class="page active" id="page-1">
+            <div class="main-title">故宫博物院</div>
+            <div class="main-subtitle">穿越六百年的文化殿堂</div>
+            <div class="cover-decoration"></div>
+            <div class="content-text" style="font-size: 20px; max-width: 500px; margin: 0 auto 20px;">
+                世界文化遗产 | 明清皇家宫殿
+            </div>
+            <div class="start-hint">
+                <div>点击任意位置开始探索</div>
+                <div style="margin-top: 5px; font-size: 24px;">▼</div>
+            </div>
+        </section>
+        
+        <!-- 页面2：历史背景 -->
+        <section class="page" id="page-2">
+            <div class="page-header">
+                <div class="page-title">六百年紫禁风云</div>
+                <div class="page-subtitle">1420-2024 | 世界文化遗产</div>
+            </div>
+            
+            <div class="content-block">
+                <div class="content-text">
+                    故宫，旧称紫禁城，是中国明清两代的皇家宫殿。它不仅是世界上现存规模最大、保存最为完整的木质结构古建筑群，更是中华五千年文明的重要象征。
+                </div>
+                
+                <div class="image-container">
+                    <img src="https://gd-hbimg-edge.huaban.com/e39dd1843aa4da749e381781f6b0a102a2e588533c9f0-ejG1Yd?auth_key=1766750400-32e2f108732e41e98571c00593d85eb6-0-a15052c9e57f9a09192ea115fcfb3473" alt="故宫全景">
+                    <div class="image-caption">故宫全景鸟瞰图 | 来源：花瓣网</div>
+                </div>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-year">1406年</div>
+                        <div class="timeline-event">明成祖朱棣下令建造紫禁城，历时14年建成</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">1420年</div>
+                        <div class="timeline-event">紫禁城正式建成，明朝迁都北京</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">1644年</div>
+                        <div class="timeline-event">清朝入关，继续使用紫禁城为皇家宫殿</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">1925年</div>
+                        <div class="timeline-event">紫禁城改为故宫博物院，向公众开放</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">1987年</div>
+                        <div class="timeline-event">被联合国教科文组织列为世界文化遗产</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 页面3：建筑特色 -->
+        <section class="page" id="page-3">
+            <div class="page-header">
+                <div class="page-title">东方建筑艺术巅峰</div>
+                <div class="page-subtitle">九千余间房屋的宏伟建筑群</div>
+            </div>
+            
+            <div class="content-block">
+                <div class="content-text">
+                    故宫建筑严格按照《周礼·考工记》中"前朝后市，左祖右社"的帝都营建原则建造，是中国古代宫廷建筑之精华，代表了东方建筑艺术的最高成就。
+                </div>
+                
+                <div class="architecture-grid">
+                    <div class="architecture-item">
+                        <div class="image-container" style="margin: 0; height: 180px; overflow: hidden;">
+                            <img src="https://gd-hbimg-edge.huaban.com/2ff3be5e439bbb12b7c59376ae9ed1ac24dab0ef119b4-9oLp7P?auth_key=1766750400-32e2f108732e41e98571c00593d85eb6-0-5e94621938a995117bf00e1678b7bd1b" alt="太和殿">
+                        </div>
+                        <div class="architecture-info">
+                            <div class="architecture-name">太和殿</div>
+                            <div class="architecture-desc">又称"金銮殿"，是故宫最大的宫殿。面阔11间，进深5间，建筑面积2377平方米，是明清两代举行重大典礼的场所。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="architecture-item">
+                        <div class="image-container" style="margin: 0; height: 180px; overflow: hidden;">
+                            <img src="https://gd-hbimg-edge.huaban.com/3e89ba8fab3feec920b1f488d0e882ec9d9269498a63-UQFtx1?auth_key=1766750400-32e2f108732e41e98571c00593d85eb6-0-f938486d5e5b9e058277a1df74f6a0d9" alt="角楼">
+                        </div>
+                        <div class="architecture-info">
+                            <div class="architecture-name">角楼</div>
+                            <div class="architecture-desc">故宫四角各有一座角楼，结构精巧复杂，有"九梁十八柱七十二脊"之称，是中国古代建筑智慧的结晶。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="architecture-item">
+                        <div class="image-container" style="margin: 0; height: 180px; overflow: hidden;">
+                            <img src="https://gd-hbimg-edge.huaban.com/340febee7a5a90fa4656878f10beaa5207e864ff2a0e9-kbjfqn?auth_key=1766750400-32e2f108732e41e98571c00593d85eb6-0-7d81777688b74d78512b6b6841a53350" alt="琉璃瓦">
+                        </div>
+                        <div class="architecture-info">
+                            <div class="architecture-name">琉璃瓦</div>
+                            <div class="architecture-desc">故宫屋顶大量使用金黄色琉璃瓦，象征皇权至高无上。瓦当和滴水上的龙凤纹样体现了皇家建筑的独特审美。</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="image-caption" style="margin-top: 15px;">图片来源：花瓣网 | 故宫博物院官网</div>
+            </div>
+        </section>
+        
+        <!-- 页面4：地理与周边 -->
+        <section class="page" id="page-4">
+            <div class="page-header">
+                <div class="page-title">地理与周边</div>
+                <div class="page-subtitle">位于北京中轴线中心的皇家宫殿</div>
+            </div>
+            
+            <div class="content-block">
+                <div class="content-title">地理位置</div>
+                <div class="content-text">
+                    北京市东城区景山前街4号，地处北京中轴线中心，占地面积约72万平方米，建筑面积约15万平方米。
+                </div>
+                
+                <div class="map-container">
+                    <div class="map-simplified">
+                        <div class="beijing-label">北京</div>
+                        <div class="forbidden-city">故宫</div>
+                    </div>
+                </div>
+                
+                <div class="content-title">开放时间</div>
+                <div class="content-text">
+                    旺季（4月1日-10月31日）：8:30-17:00（16:10停止入馆）<br>
+                    淡季（11月1日-次年3月31日）：8:30-16:30（15:40停止入馆）<br>
+                    周一闭馆（法定节假日除外）
+                </div>
+                
+                <div class="content-title">周边景点</div>
+                <div class="surroundings">
+                    <div class="surrounding-item">
+                        <div class="surrounding-name">景山公园</div>
+                        <div class="surrounding-desc">位于故宫北侧，可俯瞰故宫全景，是明清两代的皇家御苑。</div>
+                    </div>
+                    <div class="surrounding-item">
+                        <div class="surrounding-name">北海公园</div>
+                        <div class="surrounding-desc">中国现存最古老、最完整的皇家园林之一，与中海、南海合称三海。</div>
+                    </div>
+                    <div class="surrounding-item">
+                        <div class="surrounding-name">王府井大街</div>
+                        <div class="surrounding-desc">北京著名的商业区，拥有数百年历史，集购物、餐饮、文化于一体。</div>
+                    </div>
+                    <div class="surrounding-item">
+                        <div class="surrounding-name">天安门广场</div>
+                        <div class="surrounding-desc">世界最大城市广场，位于故宫南端，是中国的象征之一。</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 页面5：参观指南 -->
+        <section class="page" id="page-5">
+            <div class="page-header">
+                <div class="page-title">参观指南</div>
+                <div class="page-subtitle">开启您的故宫文化之旅</div>
+            </div>
+            
+            <div class="content-block">
+                <div class="content-title">推荐交通方式</div>
+                <div class="transportation">
+                    <div class="transport-item">
+                        <div class="transport-icon">🚇</div>
+                        <div class="transport-name">地铁</div>
+                        <div class="transport-detail">1号线天安门东/西站</div>
+                    </div>
+                    <div class="transport-item">
+                        <div class="transport-icon">🚌</div>
+                        <div class="transport-name">公交</div>
+                        <div class="transport-detail">1、2、52、82、120路</div>
+                    </div>
+                    <div class="transport-item">
+                        <div class="transport-icon">🚗</div>
+                        <div class="transport-name">自驾</div>
+                        <div class="transport-detail">周边有多个停车场</div>
+                    </div>
+                    <div class="transport-item">
+                        <div class="transport-icon">🚲</div>
+                        <div class="transport-name">骑行</div>
+                        <div class="transport-detail">附近有多处共享单车点</div>
+                    </div>
+                </div>
+                
+                <div class="content-title">推荐游览路线</div>
+                <div class="content-text">
+                    1. <strong>中轴线经典路线（约2小时）</strong>：午门→太和门→太和殿→中和殿→保和殿→乾清宫→交泰殿→坤宁宫→御花园→神武门<br><br>
+                    2. <strong>东西六宫深度游（约4小时）</strong>：在中轴线基础上，增加东六宫（延禧宫、景仁宫等）和西六宫（储秀宫、翊坤宫等）
+                </div>
+                
+                <div class="content-title">温馨提示</div>
+                <ul class="tips-list">
+                    <li>需提前通过故宫博物院官网或官方微信预约门票</li>
+                    <li>参观时请携带身份证件，凭身份证检票入园</li>
+                    <li>最佳游览季节：春季（4-5月）和秋季（9-10月）</li>
+                    <li>建议穿着舒适的鞋子，故宫面积较大，步行距离长</li>
+                    <li>可租赁电子导览器或下载故宫官方APP获取语音讲解</li>
+                    <li>请勿触摸文物和古建筑，保护文化遗产</li>
+                </ul>
+                
+                <div class="copyright">
+                    本H5素材来源于故宫博物院官网及公开授权资源<br>
+                    图片来源：花瓣网，故宫博物院官网<br>
+                    制作时间：2024年6月 | 尺寸：640px × 1040px
+                </div>
+            </div>
+        </section>
+        
+        <!-- 导航按钮 -->
+        <div class="navigation">
+            <button class="nav-btn" id="next-btn">›</button>
+        </div>
+        
+        <!-- 进度指示器 -->
+        <div class="progress-indicator">
+            <div class="progress-dot active" data-page="0"></div>
+            <div class="progress-dot" data-page="1"></div>
+            <div class="progress-dot" data-page="2"></div>
+            <div class="progress-dot" data-page="3"></div>
+            <div class="progress-dot" data-page="4"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pages = document.querySelectorAll('.page');
+            const progressDots = document.querySelectorAll('.progress-dot');
+            const nextBtn = document.getElementById('next-btn');
+            const homeBtn = document.getElementById('home-btn');
+            let currentPage = 0;
+            const totalPages = pages.length;
+            
+            // 初始化页面
+            function initPages() {
+                pages.forEach((page, index) => {
+                    if (index === 0) {
+                        page.classList.add('active');
+                    } else {
+                        page.classList.remove('active');
+                    }
+                });
+                
+                updateProgressDots();
+            }
+            
+            // 更新进度指示器
+            function updateProgressDots() {
+                progressDots.forEach((dot, index) => {
+                    if (index === currentPage) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+            
+            // 切换到指定页面
+            function goToPage(pageIndex) {
+                if (pageIndex < 0 || pageIndex >= totalPages) return;
+                
+                // 移除当前页面active类
+                pages[currentPage].classList.remove('active');
+                pages[currentPage].classList.add('prev');
+                
+                // 更新当前页面索引
+                currentPage = pageIndex;
+                
+                // 添加新页面active类
+                pages[currentPage].classList.add('active');
+                pages[currentPage].classList.remove('prev');
+                
+                // 更新进度指示器
+                updateProgressDots();
+                
+                // 滚动到页面顶部
+                pages[currentPage].scrollTop = 0;
+            }
+            
+            // 下一页
+            function nextPage() {
+                const nextPageIndex = (currentPage + 1) % totalPages;
+                goToPage(nextPageIndex);
+            }
+            
+            // 点击页面切换（除了按钮区域）
+            document.addEventListener('click', function(e) {
+                // 如果点击的是导航按钮或进度点，不触发页面切换
+                if (e.target.closest('.nav-btn') || e.target.closest('.progress-dot') || e.target.closest('.logo')) {
+                    return;
+                }
+                
+                // 点击页面其他区域切换到下一页
+                nextPage();
+            });
+            
+            // 下一页按钮事件
+            nextBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                nextPage();
+            });
+            
+            // 首页按钮事件
+            homeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                goToPage(0);
+            });
+            
+            // 进度点点击事件
+            progressDots.forEach(dot => {
+                dot.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const pageIndex = parseInt(this.getAttribute('data-page'));
+                    goToPage(pageIndex);
+                });
+            });
+            
+            // 键盘左右键切换页面
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight' || e.key === ' ') {
+                    nextPage();
+                } else if (e.key === 'ArrowLeft') {
+                    const prevPageIndex = (currentPage - 1 + totalPages) % totalPages;
+                    goToPage(prevPageIndex);
+                } else if (e.key === 'Home') {
+                    goToPage(0);
+                }
+            });
+            
+            // 触摸滑动切换（移动端）
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            document.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+            
+            document.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+            
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                const diff = touchStartX - touchEndX;
+                
+                // 向右滑动
+                if (diff > swipeThreshold) {
+                    nextPage();
+                }
+                // 向左滑动
+                else if (diff < -swipeThreshold) {
+                    const prevPageIndex = (currentPage - 1 + totalPages) % totalPages;
+                    goToPage(prevPageIndex);
+                }
+            }
+            
+            // 初始化
+            initPages();
+            
+            // 添加页面加载完成后的提示
+            setTimeout(() => {
+                document.querySelector('.start-hint').style.opacity = '1';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
